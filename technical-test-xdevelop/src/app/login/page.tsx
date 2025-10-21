@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,11 +40,6 @@ export default function LoginPage() {
          const { accessToken, role } = await r.json();
          setAccessToken(accessToken);
          login({ role, email });
-
-         console.log({
-            title: "Bienvenido",
-            description: `Sesión iniciada como ${role}`,
-         });
          router.push(next);
       } catch (err) {
          const message =
@@ -60,22 +56,25 @@ export default function LoginPage() {
    }
 
    return (
-      <main className="h-dvh flex items-center justify-center p-6 bg-gray-50">
+      <main className="h-dvh flex flex-col items-center justify-center gap-4 p-6 bg-gray-50">
          <form
             onSubmit={onSubmit}
             className="w-full max-w-sm space-y-6 bg-white shadow-xl border rounded-xl p-8"
          >
             <h1 className="text-2xl font-bold text-center text-gray-800">
-               Iniciar Sesión
+               Iniciar sesión
             </h1>
 
             <div className="space-y-2">
-               <Label htmlFor="email">Email</Label>
+               <Label htmlFor="email">Correo</Label>
                <Input
                   id="email"
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
+                  required
+                  disabled={loading}
                />
             </div>
 
@@ -88,11 +87,13 @@ export default function LoginPage() {
                      value={password}
                      onChange={(e) => setPassword(e.target.value)}
                      autoComplete="current-password"
-                     className="pr-10"
+                     className="pr-16"
+                     required
+                     disabled={loading}
                   />
                   <button
                      type="button"
-                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 transition"
+                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 transition text-sm"
                      onClick={() => setShowPassword((prev) => !prev)}
                      aria-label={
                         showPassword
@@ -105,12 +106,24 @@ export default function LoginPage() {
                </div>
             </div>
 
-            <Button type="submit" className="w-full py-2" disabled={loading}>
+            <Button
+               type="submit"
+               className="w-full py-2"
+               disabled={loading}
+               aria-busy={loading}
+            >
                {loading ? "Entrando…" : "Entrar"}
             </Button>
 
-            <p className="text-center text-xs text-gray-500 mt-4">
-               Para probar: Usa <code>eve.holt@reqres.in</code> /{" "}
+            <p className="text-center text-xs text-gray-500">
+               ¿No tienes cuenta?{" "}
+               <Link className="underline" href="/register">
+                  Crear cuenta
+               </Link>
+            </p>
+
+            <p className="text-center text-xs text-gray-500">
+               Para probar: usa <code>eve.holt@reqres.in</code> /{" "}
                <code>cityslicka</code>.
             </p>
          </form>

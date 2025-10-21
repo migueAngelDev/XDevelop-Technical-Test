@@ -24,6 +24,9 @@ export default function PostDetail() {
 
    const { role } = useSession();
    const canEdit = role === "admin";
+   console.log({
+      role,
+   });
    const { post, comments } = usePostWithComments(id);
 
    const sp = useSearchParams();
