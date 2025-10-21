@@ -35,11 +35,11 @@ export default function RegisterPage() {
          setAccessToken(accessToken);
          login({ role, email });
          router.push("/users");
-      } catch (err: any) {
+      } catch (err: unknown) {
          // Puedes reemplazar por toast si ya tienes useToast
          console.error({
             title: "Error de registro",
-            description: err.message,
+            description: err,
          });
       } finally {
          setLoading(false);

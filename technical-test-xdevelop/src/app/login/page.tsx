@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -10,6 +11,18 @@ import { setAccessToken, clearAccessToken } from "@/shared/lib/cookies";
 import { useSession } from "@/modules/auth/app/useSession";
 
 export default function LoginPage() {
+   return (
+      <Suspense
+         fallback={
+            <main className="h-dvh grid place-items-center">Cargando…</main>
+         }
+      >
+         <LoginPageInner />
+      </Suspense>
+   );
+}
+
+function LoginPageInner() {
    const [email, setEmail] = useState("eve.holt@reqres.in");
    const [password, setPassword] = useState("cityslicka");
    const [loading, setLoading] = useState(false);
@@ -31,12 +44,10 @@ export default function LoginPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
          });
-
          if (!r.ok) {
             const body = await r.json().catch(() => ({}));
             throw new Error(body?.error || "Login failed");
          }
-
          const { accessToken, role } = await r.json();
          setAccessToken(accessToken);
          login({ role, email });

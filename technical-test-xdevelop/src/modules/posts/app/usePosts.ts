@@ -53,7 +53,7 @@ export function useCreatePost(userId: number) {
             title: payload.title,
             body: payload.body,
          };
-         const prevs: any[] = [];
+         const prevs: unknown[] = [];
 
          for (const key of qKeys) {
             await qc.cancelQueries({ queryKey: key });
@@ -88,7 +88,7 @@ export function useUpdatePost() {
             .getQueryCache()
             .findAll({ queryKey: ["posts"] })
             .map((q) => q.queryKey);
-         const prevs: any[] = [];
+         const prevs: unknown[] = [];
          for (const key of qKeys) {
             await qc.cancelQueries({ queryKey: key });
             const prev = qc.getQueryData<{ posts: Post[]; totalPages: number }>(
@@ -110,7 +110,9 @@ export function useUpdatePost() {
          return { prevs, prevPost };
       },
       onError: (_e, { id }, ctx) => {
-         ctx?.prevs?.forEach(([key, prev]: any) => qc.setQueryData(key, prev));
+         ctx?.prevs?.forEach(([key, prev]: any) =>
+            qc.setQueryData(key, prev)
+         );
          if (ctx?.prevPost) qc.setQueryData(["post", id], ctx.prevPost);
       },
       onSettled: (_d, _e, { id }) => {

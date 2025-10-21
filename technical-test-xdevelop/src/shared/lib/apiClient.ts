@@ -4,8 +4,8 @@ type Json = Record<string, unknown> | unknown[];
 
 export class HttpError extends Error {
    status: number;
-   body?: any;
-   constructor(message: string, status: number, body?: any) {
+   body?: unknown;
+   constructor(message: string, status: number, body?: unknown) {
       super(message);
       this.status = status;
       this.body = body;
